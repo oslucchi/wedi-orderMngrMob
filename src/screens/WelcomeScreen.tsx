@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   FlatList,
   Image,
@@ -8,15 +8,19 @@ import {
   View,
 } from "react-native";
 import colors from "../config/colors";
-import { Orders } from "../dataModels/orders";
+import { Order } from "../types/orders";
 
 import { useGetOrders } from "../models/OrderPicking";
 
 export interface OrderProps {
-  orderList: Orders[];
+  orderList: Order[];
 }
 
-const OrdersComponent: React.FunctionComponent = (orderList: Orders[]) => {
+const messages = {
+  noOrder: 'Nessun ordine in preparazione'
+}
+
+const OrdersComponent: FC<OrderProps> = ({ orderList }) => {
   return orderList.length > 0 ? (
     <FlatList
       data={orderList}
@@ -25,8 +29,8 @@ const OrdersComponent: React.FunctionComponent = (orderList: Orders[]) => {
       )}
     />
   ) : (
-    <Text>Nessun ordine in preparazione</Text>
-  );
+      <Text>{messages.noOrder}</Text>
+    );
 };
 
 const ErrorComponent = () => {
@@ -37,7 +41,7 @@ const ErrorComponent = () => {
   );
 };
 
-const WelcomeScreen = (props: any) => {
+const WelcomeScreen: FC = () => {
   const { orderList, error } = useGetOrders();
 
   return (

@@ -1,11 +1,11 @@
-export class Orders {
-	idOrder: number;
-	status: string;
-	idCustomer: number;
-	idCustomerDelivery: number;
-	requestedAssemblyDate:Date;
-	effectiveAssemblyDate:Date;
-	shipmentDate:Date;
+export type Order = {
+    idOrder: number;
+    status: string;
+    idCustomer: number;
+    idCustomerDelivery: number;
+    requestedAssemblyDate: Date;
+    effectiveAssemblyDate: Date;
+    shipmentDate: Date;
     orderRef: string;
     transportDocNum: string;
     forwarder: string;
@@ -25,4 +25,9 @@ export class Orders {
     sourceIssue: string;
     orderValue: number;
     selected: boolean;
+}
+
+export enum OrderStatus {
+    CON = `'CON'`,
+    SYS = `'SYS'`
 }
