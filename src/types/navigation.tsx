@@ -1,6 +1,6 @@
-export type RootNavigatorParams = {
+export type BottomNavigatorParams = {
   Main: undefined;
   PickList: { idOrder: string };
-  Inventory: { idLocation: string };
+  Inventory: undefined;
   PrepareOrder: undefined;
 };
