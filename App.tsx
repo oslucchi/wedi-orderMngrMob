@@ -1,32 +1,59 @@
 import React from "react";
-import { Button, Modal, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { RootNavigatorParams } from "./src/types/navigation";
+import { NavigationContainer } from "@react-navigation/native";
+import { BottomNavigatorParams } from "./src/types/navigation";
 
-import Root from "./Root";
 import Main from "./src/screens/Main";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import PrepareOrder from "./src/screens/PrepareOrder";
+import PickList from "./src/screens/PickList";
+import { Inventory } from "./src/screens";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+
+const { Navigator, Screen } = createBottomTabNavigator<BottomNavigatorParams>();
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen component={Main} name="Main"></Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Navigator initialRouteName="Main">
+          <Screen
+            options={{
+              tabBarIcon: (props) => <Ionicons {...props} name="ios-barcode" />,
+            }}
+            component={Main}
+            name="Main"
+          />
+          <Screen
+            options={{
+              tabBarIcon: (props) => (
+                <Ionicons {...props} name="ios-add-circle" />
+              ),
+            }}
+            component={PrepareOrder}
+            name="PrepareOrder"
+          />
+          <Screen
+            options={{
+              tabBarIcon: (props) => <Ionicons {...props} name="ios-albums" />,
+            }}
+            component={PickList}
+            name="PickList"
+          />
+          <Screen
+            options={{
+              tabBarIcon: (props) => (
+                <Ionicons {...props} name="ios-list-box" />
+              ),
+            }}
+            component={Inventory}
+            name="Inventory"
+          />
+        </Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 };
-
-const Stack = createStackNavigator<RootNavigatorParams>();
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default App;
