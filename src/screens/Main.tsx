@@ -15,16 +15,17 @@ import colors from "../config/colors";
 
 import { useNavigation, useNavigationState } from "@react-navigation/native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { useRestService } from "../services/RestService";
+import { Stock } from "../types/stock";
 
 const { width } = Dimensions.get("screen");
 
 const Main: FC<any> = () => {
   const { navigate } = useNavigation();
-  const showSettings: any = (event: any) => {
-    event.preventDefault();
-  }
+  const { get } = useRestService();
   const [hasPermission, setHasPermission] = useState<boolean|null>(null); // la variabile hasPermiossion e' pbserved. la cambi via setHasPermission. La modifica implica il refresh
   const [scanned, setScanned] = useState(false);
+  const [stock, setStock] = useState<Stock|null>(null);
   
   useEffect(() => {
     (async () => {
@@ -35,7 +36,13 @@ const Main: FC<any> = () => {
   
   const handledBarcodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`data ${data} scanned`);
+    get(`locations/${data}`)
+      .then( res => {
+        setStock(res.data.stock);
+        alert(`Location ${data}
+               Article ${res.data.stock.articleCode} - ${res.data.stock.articleDescription}
+               Quantity: ${res.data.stock.quantity}`);
+      })
   }
   
   return (
