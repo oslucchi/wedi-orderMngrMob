@@ -17,5 +17,15 @@ export const useRestService = () => {
     );
   };
 
-  return { post };
+  const get = (path: string) => {
+    console.log("Invoking '" + SERVER_URL + REST_PATH + path + "'");
+    return axios.get(SERVER_URL + REST_PATH + path, {
+      headers: {
+        Language: "IT-it",
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  return { post, get };
 };
