@@ -1,35 +1,59 @@
-import React from "react";
+import React, { FC } from "react";
 import {
+  Alert,
+  Dimensions,
   FlatList,
   Image,
   ImageBackground,
+  Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import colors from "../config/colors";
-import { Orders } from "../dataModels/orders";
+import { Order } from "../types/orders";
 
 import { useGetOrders } from "../models/OrderPicking";
+import { useNavigation } from "@react-navigation/native";
 
 export interface OrderProps {
-  orderList: Orders[];
+  orderList: Order[];
 }
 
-const OrdersComponent: React.FunctionComponent = (orderList: Orders[]) => {
+const { width } = Dimensions.get("screen");
+
+const messages = {
+  noOrder: "Nessun ordine in preparazione",
+};
+
+const OrdersComponent: FC<OrderProps> = ({ orderList }) => {
+  const { navigate } = useNavigation();
+
   return orderList.length > 0 ? (
     <FlatList
+      style={styles.flatlist}
+      contentContainerStyle={styles.listContainer}
       data={orderList}
       renderItem={({ item }) => (
-        <Text style={styles.actionError}>{item.orderRef}</Text>
+        <Pressable
+          onPress={() => {
+            navigate("PickList", { idOrder: item.idOrder });
+          }}
+        >
+          <View style={styles.item}>
+            <Text
+              style={styles.actionError}
+            >{`${item.orderRef} - ${item.customerDescription}`}</Text>
+          </View>
+        </Pressable>
       )}
     />
   ) : (
-    <Text>Nessun ordine in preparazione</Text>
+    <Text>{messages.noOrder}</Text>
   );
 };
 
-const ErrorComponent = () => {
+const ErrorComponent: FC = () => {
   return (
     <View style={styles.alertContainer}>
       <Text style={styles.actionError}>Errore nella fetch</Text>
@@ -37,7 +61,7 @@ const ErrorComponent = () => {
   );
 };
 
-const WelcomeScreen = (props: any) => {
+const PrepareOrder: FC = () => {
   const { orderList, error } = useGetOrders();
 
   return (
@@ -71,10 +95,24 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
-  loginButton: {
-    width: "100%",
-    height: 70,
-    backgroundColor: colors.primary,
+  item: {
+    height: 50,
+    width,
+    borderWidth: 1,
+  },
+  flatlist: {
+    flex: 1,
+    top: 80,
+  },
+  listContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    // width: "100%",
+    // height: 450,
+    // backgroundColor: colors.secondary,
+    // alignItems: "center",
+    // flexGrow: 1,
+    // justifyContent: "center",
   },
   logo: {
     width: 150,
@@ -85,10 +123,5 @@ const styles = StyleSheet.create({
     top: 30,
     alignItems: "center",
   },
-  registerButton: {
-    width: "100%",
-    height: 70,
-    backgroundColor: colors.secondary,
-  },
 });
-export default WelcomeScreen;
+export default PrepareOrder;
