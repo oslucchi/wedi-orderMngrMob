@@ -2,10 +2,10 @@ import React, { FC, useEffect, useState } from "react";
 import { Button, Dimensions, StyleSheet, View } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRestService } from "../../services/RestService";
-import { Stock } from "../../types/stock";
+import { useInventoryContext } from "./InventoryContext";
 
 const { width } = Dimensions.get("screen");
 
@@ -17,13 +17,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-const Inventory: FC<any> = () => {
+const InventoryScanner: FC = () => {
   const { navigate } = useNavigation();
   const { top } = useSafeAreaInsets();
   const { get } = useRestService();
-  const [stock, setStock] = useState<Stock | null>(null);
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null); // la variabile hasPermiossion e' pbserved. la cambi via setHasPermission. La modifica implica il refresh
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null); // la variabile hasPermission e' observed. La cambi via setHasPermission. La modifica implica il rerender
   const [scanning, setScanning] = useState(false);
+  const { setStock } = useInventoryContext();
 
   useEffect(() => {
     (async () => {
@@ -32,21 +32,23 @@ const Inventory: FC<any> = () => {
     })();
   });
 
-  const handledBarcodeScanned = ({ type, data }) => {
+  const handledBarcodeScanned: BarCodeScannedCallback = ({ type, data }) => {
     setScanning(false);
     alert(`data ${data} scanned`);
-    get(`locations/${data}`).then((res) => {
-      setStock(res.data.stock);
-      alert(`Location ${data}
-               Article ${res.data.stock.articleCode} - ${res.data.stock.articleDescription}
-               Quantity: ${res.data.stock.quantity}`);
-    });
+    get(`locations/${data}`)
+      .then((res) => {
+        setStock(res.data.stock);
+        navigate("InventoryStockDetail");
+      })
+      .catch((err) => {
+        throw err;
+      });
   };
 
   return (
     <View style={[styles.container, { marginTop: top }]}>
       <BarCodeScanner
-        onBarCodeScanned={scanning ? handledBarcodeScanned : undefined}
+        onBarCodeScanned={scanning ? handledBarcodeScanned : () => null}
         style={styles.scanner}
       />
       {!scanning && (
@@ -56,4 +58,4 @@ const Inventory: FC<any> = () => {
   );
 };
 
-export default Inventory;
+export default InventoryScanner;
