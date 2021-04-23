@@ -8,7 +8,7 @@ import Main from "./src/screens/Main";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PrepareOrder from "./src/screens/PrepareOrder";
 import PickList from "./src/screens/PickList";
-import { Inventory } from "./src/screens";
+import { InventoryNavigation } from "./src/screens";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const { Navigator, Screen } = createBottomTabNavigator<BottomNavigatorParams>();
@@ -47,7 +47,7 @@ const App = () => {
                 <Ionicons {...props} name="ios-list-box" />
               ),
             }}
-            component={Inventory}
+            component={InventoryNavigation}
             name="Inventory"
           />
         </Navigator>
