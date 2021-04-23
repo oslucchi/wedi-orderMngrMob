@@ -37,7 +37,7 @@ const InventoryScanner: FC = () => {
     alert(`data ${data} scanned`);
     get(`locations/${data}`)
       .then((res) => {
-        setStock(res.data.stock);
+        setStock(res.data.stockList);
         navigate("InventoryStockDetail");
       })
       .catch((err) => {
