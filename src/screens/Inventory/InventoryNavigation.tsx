@@ -2,7 +2,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import InventoryContextProvider from "./InventoryContext";
 import InventoryScanner from "./InventoryScanner";
-import InventoryStockDetail from "./InventoryStockDetail";
+import InventorySingleProduct from "./InventorySingleProduct";
+import InventoryMultipleProducts from "./InventoryMultipleProducts";
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -11,7 +12,14 @@ const InventoryNavigation = () => {
     <InventoryContextProvider stock={null} setStock={() => null}>
       <Navigator>
         <Screen name="InventoryScanner" component={InventoryScanner} />
-        <Screen name="InventoryStockDetail" component={InventoryStockDetail} />
+        <Screen
+          name="InventorySingleProduct"
+          component={InventorySingleProduct}
+        />
+        <Screen
+          name="InventoryMultipleProducts"
+          component={InventoryMultipleProducts}
+        />
       </Navigator>
     </InventoryContextProvider>
   );
