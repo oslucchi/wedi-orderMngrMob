@@ -25,7 +25,7 @@ const InventoryStock: FC = () => {
           renderItem={({ item, index }) => (
             <InventoryItem
               key={index}
-              onPress={() => navigate("InventoryStockDetail")}
+              onPress={() => navigate("InventorySingleProduct")}
               stockItem={item}
             />
           )}
